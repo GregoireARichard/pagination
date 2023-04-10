@@ -7,7 +7,7 @@ const port = 8000;
 
 const router = express.Router()
 
-app.get("/pagination/:pageid", ApiController.sendDataFromPage);
+app.get("/pagination", ApiController.sendDataFromPage);
 app.listen(port, () => {
   console.log(`listening on port ${port}`);
 });
