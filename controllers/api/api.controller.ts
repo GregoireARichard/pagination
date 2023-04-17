@@ -9,7 +9,7 @@ export default class ApiController{
         const limit = typeof (req.query.limit) == 'string' ? parseInt(req.query.limit) : 0
         const order = typeof (req.query.order) == 'string' ? req.query.order : ""
         const sortAttr = typeof (req.query.sortAttr) == 'string' ? req.query.sortAttr : ""
-        return ApiService.sendDataFromPage(page, limit, order, sortAttr)
-
+        const result =  await ApiService.sendDataFromPage(page, limit, order, sortAttr)
+        res.status(200).json(result).end();
     }
 }
