@@ -9,18 +9,26 @@ function App() {
   const [limit, setLimit] = useState(10);
   const [order, setOrder] = useState("desc");
   const [sortAttr, setSortAttr] = useState("title");
-
+  const url = process.env.REACT_APP_URL
   useEffect(() => {
     const fetchData = async () => {
       const result = await axios(
-        `http://localhost:8000/pagination/?order=${order}&sortAttr=${sortAttr}`
+        `${url}?order=${order}&sortAttr=${sortAttr}`
       );
       setData(result.data);
     };
     fetchData();
   }, [currentPage, limit, order, sortAttr]);
 
-  const handlePageChange = (page) => setCurrentPage(page);
+  const handlePageChange = (page) => {
+    if (page < 1) {
+      setCurrentPage(1);
+    } else if (page > totalPages) {
+      setCurrentPage(totalPages);
+    } else {
+      setCurrentPage(page);
+    }
+  };
 
   const handleLimitChange = (e) => {
     setLimit(parseInt(e.target.value));
@@ -94,7 +102,7 @@ function App() {
           style={{ marginLeft: "5px" }}
         />
       </div>
-      <p>Number of Pages is : {Math.ceil(data.length / limit)}</p>
+      <p>Number of Pages : {Math.ceil(data.length / limit)}</p>
       <Table striped bordered hover>
         <thead>
           <tr>
