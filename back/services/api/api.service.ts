@@ -21,8 +21,6 @@ const pool = mysql.createPool({
 
 export default class ApiService {
   public static async sendDataFromPage(
-    page: number,
-    limit: number,
     order: string,
     sortAttr: string
   ) {
@@ -35,8 +33,7 @@ export default class ApiService {
         rental.inventory_id = film.film_id
         group by title
         order by ${sortAttr} ${order}
-        limit ${limit}
-        offset ${limit * (page - 1)}`;
+       `;
 
     const connection: Connection | any = await new Promise((resolve, reject) => {
       pool.getConnection((err: any, connection: Connection) => {
