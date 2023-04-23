@@ -24,15 +24,16 @@ export default class ApiService {
     order: string,
     sortAttr: string
   ) {
-    const sqlquery = `select 
-        category.name, film.title, film.rental_rate, film.rating, rental.inventory_id, count(*) as nbOfRentals
-        from film, film_category, category, rental
-        where 
-        film_category.film_id = film.film_id and 
-        category.category_id = film_category.category_id and
-        rental.inventory_id = film.film_id
-        group by title
-        order by ${sortAttr} ${order}
+    const sqlquery = `
+    SELECT film.film_id, film.title AS title, film.rental_rate, film.rating,
+    category.name AS name, COUNT(rental.rental_id) AS nbOfRentals
+    FROM film
+    INNER JOIN film_category ON film.film_id = film_category.film_id
+    INNER JOIN category ON film_category.category_id = category.category_id
+    LEFT JOIN inventory ON film.film_id = inventory.film_id
+    LEFT JOIN rental ON inventory.inventory_id = rental.inventory_id
+    GROUP BY film.film_id, title, film.rental_rate, film.rating, name
+    ORDER BY ${sortAttr} ${order}
        `;
 
     const connection: Connection | any = await new Promise((resolve, reject) => {
