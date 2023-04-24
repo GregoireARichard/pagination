@@ -22,7 +22,9 @@ const pool = mysql.createPool({
 export default class ApiService {
   public static async sendDataFromPage(
     order: string,
-    sortAttr: string
+    sortAttr: string,
+    offset: number,
+    pageSize: number
   ) {
     const sqlquery = `
     SELECT film.film_id, film.title AS title, film.rental_rate, film.rating,
@@ -34,6 +36,7 @@ export default class ApiService {
     LEFT JOIN rental ON inventory.inventory_id = rental.inventory_id
     GROUP BY film.film_id, title, film.rental_rate, film.rating, name
     ORDER BY ${sortAttr} ${order}
+    LIMIT ${offset}, ${pageSize}
        `;
 
     const connection: Connection | any = await new Promise((resolve, reject) => {
